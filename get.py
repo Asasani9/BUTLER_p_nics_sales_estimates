@@ -13,12 +13,13 @@ if not REDIVIS_API_TOKEN:
 def get():
     
     logger.info('Getting notebooks from Redivis...')
-    username = "glevines"
-    workflow_name = "gva:kgtn"
-    notebook_name = "gva_updater:x4bf"
+    username = "[YOUR_USERNAME]"  # Replace with your Redivis username
+    workflow_name = "[WORKFLOW_NAME]"  # Replace with your workflow name
+    notebook_name = "[NOTEBOOK_NAME]"  # Replace with your notebook name
     
     notebook = redivis.notebook(f"{username}.{workflow_name}.{notebook_name}")
     
     logger.info(f'Running {notebook_name} notebook...')
     notebook.run(wait_for_finish=True)  # Wait for the notebook to finish running
     logger.info(f'Running {notebook_name} notebook finished.')
+    # Wordpress triggers here or in Redivis notebook itself.
