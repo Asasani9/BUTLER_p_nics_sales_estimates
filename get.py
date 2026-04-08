@@ -55,4 +55,4 @@ def send_slack(text, error=False):
         if not data.get("ok"):
             raise ValueError(f"Slack API error: {data}")
     except Exception as e:
-        log(f"[Slack] Failed to send message: {e}")
+        logger.info(f"[Slack] Failed to send message: {e}")
