@@ -23,18 +23,31 @@ def get():
     notebook = redivis.notebook(f"{username}.{workflow_name}.{notebook_name}")
     
     logger.info(f'Running {notebook_name} notebook...')
-    notebook.run(wait_for_finish=True)  # Wait for the notebook to finish running
+    try:
+        notebook.run(wait_for_finish=True)  # Wait for the notebook to finish running
+    except Exception as e:
+        send_slack(f'Gun Sales Tracker notebook failed: {e}', True)
     logger.info(f'Running {notebook_name} notebook finished.')
     # Wordpress triggers here or in Redivis notebook itself.
+    send_slack("TEST - Gun Sales Tracker data pulled successfully: https://nics-data.s3.amazonaws.com/nics-latest.csv")
 
-def send_slack(text):
+def send_slack(text, error=False):
+    color = '#FFFFFF'
+    if error:
+        color = '#FF0000'
     try:
         response = requests.post(
             "https://slack.com/api/chat.postMessage",
             headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN.get_value()}"},
             json={
                 "channel": SLACK_CHANNEL_ID,
-                "text": text
+                "text": "Gun Sales Tracker",
+                "attachments": [
+                    {
+                        "color": color
+                        "text": text
+                    }
+                ]
             }
         )
         response.raise_for_status()
