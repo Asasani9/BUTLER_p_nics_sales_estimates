@@ -12,11 +12,10 @@ import time
 import os
 
 # === LOGGING SETUP === 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 file_handler = logging.FileHandler("app.log", mode="a", encoding="utf-8")
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
 formatter = logging.Formatter(
    "{asctime} - {levelname} - {message}",
     style="{",
@@ -25,14 +24,15 @@ formatter = logging.Formatter(
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
+
 # === TIMEZONE SETUP ===
 os.environ['TZ'] = 'US/Pacific'
 time.tzset()
 
 def main():
-    # Use the logger configured above, not logging.basicConfig
-    logger.setLevel(logging.INFO) 
-    
+    # Use the logger configured above, not logging.basicConfig 
     start_time = datetime.datetime.now()
     logger.info(f'Started at {start_time}')
     
