@@ -44,7 +44,7 @@ def send_slack(text, error=False):
                 "text": "Gun Sales Tracker",
                 "attachments": [
                     {
-                        "color": color
+                        "color": color,
                         "text": text
                     }
                 ]
