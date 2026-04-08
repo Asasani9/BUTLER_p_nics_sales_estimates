@@ -10,6 +10,9 @@ REDIVIS_API_TOKEN = os.environ["REDIVIS_API_TOKEN"]
 if not REDIVIS_API_TOKEN:
     raise RuntimeError("Missing REDIVIS_API_TOKEN environment variable.")
 
+SLACK_BOT_TOKEN = redivis.organization("TheTrace").secret("gva_slackbot_token")
+SLACK_CHANNEL_ID = "C096NBWPZA7"
+
 def get():
     
     logger.info('Getting notebooks from Redivis...')
@@ -23,3 +26,20 @@ def get():
     notebook.run(wait_for_finish=True)  # Wait for the notebook to finish running
     logger.info(f'Running {notebook_name} notebook finished.')
     # Wordpress triggers here or in Redivis notebook itself.
+
+def send_slack(text):
+    try:
+        response = requests.post(
+            "https://slack.com/api/chat.postMessage",
+            headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN.get_value()}"},
+            json={
+                "channel": SLACK_CHANNEL_ID,
+                "text": text
+            }
+        )
+        response.raise_for_status()
+        data = response.json()
+        if not data.get("ok"):
+            raise ValueError(f"Slack API error: {data}")
+    except Exception as e:
+        log(f"[Slack] Failed to send message: {e}")
